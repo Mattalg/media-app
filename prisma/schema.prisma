@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Movie {
+  id              String  @id @default(uuid())
+  imDbId          String  @unique
+  rank            String  @unique
+  title           String
+  fullTitle       String
+  year            String?
+  image           String
+  crew            String
+  imDbRating      String
+  imDbRatingCount String
+  votesFor        Vote[]  @relation("for")
+  votesAgainst    Vote[]  @relation("against")
+}
+
+model Vote {
+  id             String   @id @default(uuid())
+  createdAt      DateTime @default(now())
+  votedFor       Movie    @relation("for", fields: [votedForId], references: [id])
+  votedForId     String
+  votedAgainst   Movie    @relation("against", fields: [votedAgainstId], references: [id])
+  votedAgainstId String
+
+  @@index([votedForId])
+  @@index([votedAgainstId])
+}
