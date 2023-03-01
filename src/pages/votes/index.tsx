@@ -12,6 +12,7 @@ export default function Votes() {
       </Link>
       {movies && (
         <div className="mx-auto mt-4 flex w-max flex-col gap-2">
+          <h1 className="mx-auto mb-6 w-max text-xl text-white">Most voted for</h1>
           {movies
             .sort((a, b) => b.votesFor.length - a.votesFor.length)
             .map((movie) => (
