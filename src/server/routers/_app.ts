@@ -1,4 +1,5 @@
 import { prisma } from '@/utils/prisma';
+import { getRandomRanks } from '@/utils/random-movie';
 import { z } from 'zod';
 import { procedure, router } from '../trpc';
 
@@ -45,6 +46,14 @@ export const appRouter = router({
 
         return result;
       }),
+    contenders: procedure.query(async () => {
+      const [firstRank, secondRank] = getRandomRanks();
+
+      const first = await findUniqueByRank(firstRank);
+      const second = await findUniqueByRank(secondRank);
+
+      return { first, second };
+    }),
     newVote: procedure
       .input(
         z.object({
